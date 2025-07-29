@@ -1,11 +1,12 @@
-from app.schemas.attachment import AttachmentExtended
-from app.schemas.channel import ChannelExtended
-from app.schemas.device_token import DeviceTokenExtended
-from app.schemas.offer import OfferExtended
-from app.schemas.user import UserExtended
-
-
 def rebuild_schemas():
+    from app.schemas.extentions import (
+        AttachmentExtended,
+        ChannelExtended,
+        DeviceTokenExtended,
+        OfferExtended,
+        UserExtended,
+    )
+
     ChannelExtended.model_rebuild()
     UserExtended.model_rebuild()
     OfferExtended.model_rebuild()

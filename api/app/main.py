@@ -2,14 +2,15 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+import uuid
 
 from app.schemas.rebuild import rebuild_schemas
-
 rebuild_schemas()
 
-from app.schemas.device_token import DeviceTokenCreate, DeviceTokenExtended
-from app.schemas.offer import OfferCreate, OfferExtended
-from app.schemas.user import UserCreate, UserExtended
+from app.schemas.extentions import DeviceTokenExtended, OfferExtended, UserExtended
+from app.schemas.device_token import DeviceTokenCreate
+from app.schemas.offer import OfferCreate
+from app.schemas.user import UserCreate
 from app.firebase_service import try_verify_firebase_token, verify_firebase_token
 from app import models
 from app.schemas import *
@@ -17,7 +18,11 @@ from app.database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(
+    title="Offers API",
+    description="API for managing offers and user subscriptions",
+    version="1.0.0",
+)
 
 isDebug = uvicorn.config.Config(app).reload
 
@@ -101,7 +106,7 @@ async def create_user(
     return new_user
 
 
-@app.post("/api/v1/device_token", response_model=DeviceTokenExtended)
+@app.post("/api/v1/device_token", response_model=DeviceTokenExtended, tags=["Devices"])
 async def register_device_token(
     device_token: DeviceTokenCreate,
     db: Session = Depends(get_db),
@@ -114,9 +119,9 @@ async def register_device_token(
     )
 
     if db_device_token:
-        # todo: extends expiration date for token if it exists
-        db_device_token = fb_user["uid"]
-
+        db_device_token.user_id = fb_user["uid"]
+        db.commit()
+        db.refresh(db_device_token)
         return db_device_token
     else:
         new_device_token = models.DeviceToken(
@@ -131,14 +136,15 @@ async def register_device_token(
         return new_device_token
 
 
-@app.get("/api/v1/offers", response_model=list[OfferExtended])
+@app.get("/api/v1/offers", response_model=list[OfferExtended], tags=["Offers"])
 async def get_offers(
     db: Session = Depends(get_db),
     fb_user=Depends(try_verify_firebase_token),
 ):
-    # gets all the offers that have no specified channels
-    offers = db.query(models.Offer).filter(len(models.Offer.channels) == 0).all()
-    # get all the offers that have channels and the user is subscribed to
+    """Get all available offers"""
+    offers = db.query(models.Offer).outerjoin(models.Offer.channels).filter(
+        models.Channel.id == None
+    ).all()
     if fb_user:
         user_channels = (
             db.query(models.Channel)
@@ -159,26 +165,34 @@ async def get_offers(
     return offers
 
 
-@app.post("/api/v1/offer", response_model=OfferExtended)
+@app.post("/api/v1/offer", response_model=OfferExtended, tags=["Offers"])
 async def create_offer(
     offer: OfferCreate,
     db: Session = Depends(get_db),
     fb_user=Depends(verify_firebase_token),
 ):
+    """Create a new offer (admin only)"""
     user = db.query(models.User).filter(models.User.id == fb_user["uid"]).first()
     if not user or not user.is_admin:
         raise HTTPException(status_code=403, detail="Access forbidden: Admins only")
 
     new_offer = models.Offer(
+        id=str(uuid.uuid4()),
         title=offer.title,
         description=offer.description,
         image=offer.image,
         expiration_date=offer.expiration_date,
-        channels=offer.channels,
     )
     db.add(new_offer)
     db.commit()
     db.refresh(new_offer)
+
+    if offer.channel_ids:
+        channels = db.query(models.Channel).filter(
+            models.Channel.id.in_(offer.channel_ids)
+        ).all()
+        new_offer.channels = channels
+        db.commit()
 
     return new_offer
 

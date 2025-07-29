@@ -1,14 +1,11 @@
-
 from datetime import datetime
-from pydantic import BaseModel
-from typing import TYPE_CHECKING, Optional
-
-if TYPE_CHECKING:
-    from app.schemas.user import User
+from pydantic import BaseModel, ConfigDict
+from typing import Optional
 
 
 class DeviceTokenBase(BaseModel):
     token: str
+    model_config = ConfigDict(from_attributes=True)
 
 
 class DeviceTokenCreate(DeviceTokenBase):
@@ -19,7 +16,3 @@ class DeviceToken(DeviceTokenBase):
     id: str
     expiration_date: datetime
     user_id: Optional[str] = None
-
-
-class DeviceTokenExtended(DeviceToken):
-    user: Optional["User"] = None

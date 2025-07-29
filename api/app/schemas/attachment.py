@@ -1,15 +1,12 @@
-
 from __future__ import annotations
-from pydantic import BaseModel
-from typing import TYPE_CHECKING, Optional
-
-if TYPE_CHECKING:
-    from app.schemas.offer import Offer
+from pydantic import BaseModel, ConfigDict
+from typing import Optional
 
 
 class AttachmentBase(BaseModel):
     file_name: str
     url: str
+    model_config = ConfigDict(from_attributes=True)
 
 
 class AttachmentCreate(AttachmentBase):
@@ -19,7 +16,3 @@ class AttachmentCreate(AttachmentBase):
 class Attachment(AttachmentBase):
     id: str
     offer_id: Optional[str] = None  # One-to-one relationship with Offer
-
-
-class AttachmentExtended(Attachment):
-    offer: Optional["Offer"] = None  # One-to-one relationship with Offer
