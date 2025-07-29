@@ -1,0 +1,765 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Offers API",
+        "description": "API for managing offers and user subscriptions",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/user": {
+            "get": {
+                "summary": "Get Current User",
+                "operationId": "get_current_user_api_v1_user_get",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "title": "Authorization"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserExtended"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create User",
+                "operationId": "create_user_api_v1_user_post",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "title": "Authorization"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserExtended"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users": {
+            "get": {
+                "summary": "Get Users",
+                "operationId": "get_users_api_v1_users_get",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "title": "Authorization"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserExtended"
+                                    },
+                                    "title": "Response Get Users Api V1 Users Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/device_token": {
+            "post": {
+                "tags": [
+                    "Devices"
+                ],
+                "summary": "Register Device Token",
+                "operationId": "register_device_token_api_v1_device_token_post",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "title": "Authorization"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DeviceTokenCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeviceTokenExtended"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/offers": {
+            "get": {
+                "tags": [
+                    "Offers"
+                ],
+                "summary": "Get Offers",
+                "description": "Get all available offers",
+                "operationId": "get_offers_api_v1_offers_get",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "title": "Authorization"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/OfferExtended"
+                                    },
+                                    "title": "Response Get Offers Api V1 Offers Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/offer": {
+            "post": {
+                "tags": [
+                    "Offers"
+                ],
+                "summary": "Create Offer",
+                "description": "Create a new offer (admin only)",
+                "operationId": "create_offer_api_v1_offer_post",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "title": "Authorization"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OfferCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OfferExtended"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/offer/{offer_id}": {
+            "delete": {
+                "summary": "Delete Offer",
+                "operationId": "delete_offer_api_v1_offer__offer_id__delete",
+                "parameters": [
+                    {
+                        "name": "offer_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Offer Id"
+                        }
+                    },
+                    {
+                        "name": "authorization",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "title": "Authorization"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OfferExtended"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Attachment": {
+                "properties": {
+                    "file_name": {
+                        "type": "string",
+                        "title": "File Name"
+                    },
+                    "url": {
+                        "type": "string",
+                        "title": "Url"
+                    },
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "offer_id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Offer Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file_name",
+                    "url",
+                    "id"
+                ],
+                "title": "Attachment"
+            },
+            "Channel": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "users_ids": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Users Ids",
+                        "default": []
+                    },
+                    "offers_ids": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Offers Ids",
+                        "default": []
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "id"
+                ],
+                "title": "Channel"
+            },
+            "DeviceToken": {
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Token"
+                    },
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "expiration_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Expiration Date"
+                    },
+                    "user_id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "User Id"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "token",
+                    "id",
+                    "expiration_date"
+                ],
+                "title": "DeviceToken"
+            },
+            "DeviceTokenCreate": {
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Token"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "token"
+                ],
+                "title": "DeviceTokenCreate"
+            },
+            "DeviceTokenExtended": {
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Token"
+                    },
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "expiration_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Expiration Date"
+                    },
+                    "user_id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "User Id"
+                    },
+                    "user": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "token",
+                    "id",
+                    "expiration_date"
+                ],
+                "title": "DeviceTokenExtended"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "OfferCreate": {
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "title": "Title"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "image": {
+                        "type": "string",
+                        "title": "Image"
+                    },
+                    "expiration_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Expiration Date"
+                    },
+                    "channel_ids": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Channel Ids",
+                        "default": []
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "title",
+                    "description",
+                    "image",
+                    "expiration_date"
+                ],
+                "title": "OfferCreate"
+            },
+            "OfferExtended": {
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "title": "Title"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "image": {
+                        "type": "string",
+                        "title": "Image"
+                    },
+                    "expiration_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Expiration Date"
+                    },
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "attachments_ids": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Attachments Ids",
+                        "default": []
+                    },
+                    "channels_ids": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Channels Ids",
+                        "default": []
+                    },
+                    "attachments": {
+                        "items": {
+                            "$ref": "#/components/schemas/Attachment"
+                        },
+                        "type": "array",
+                        "title": "Attachments",
+                        "default": []
+                    },
+                    "channels": {
+                        "items": {
+                            "$ref": "#/components/schemas/Channel"
+                        },
+                        "type": "array",
+                        "title": "Channels",
+                        "default": []
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "title",
+                    "description",
+                    "image",
+                    "expiration_date",
+                    "id"
+                ],
+                "title": "OfferExtended"
+            },
+            "User": {
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "title": "Email"
+                    },
+                    "is_admin": {
+                        "type": "boolean",
+                        "title": "Is Admin",
+                        "default": false
+                    },
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "channels_ids": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Channels Ids",
+                        "default": []
+                    },
+                    "device_tokens_ids": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Device Tokens Ids",
+                        "default": []
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "email",
+                    "id"
+                ],
+                "title": "User"
+            },
+            "UserCreate": {
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "title": "Email"
+                    },
+                    "is_admin": {
+                        "type": "boolean",
+                        "title": "Is Admin",
+                        "default": false
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "email"
+                ],
+                "title": "UserCreate"
+            },
+            "UserExtended": {
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "title": "Email"
+                    },
+                    "is_admin": {
+                        "type": "boolean",
+                        "title": "Is Admin",
+                        "default": false
+                    },
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "channels_ids": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Channels Ids",
+                        "default": []
+                    },
+                    "device_tokens_ids": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Device Tokens Ids",
+                        "default": []
+                    },
+                    "channels": {
+                        "items": {
+                            "$ref": "#/components/schemas/Channel"
+                        },
+                        "type": "array",
+                        "title": "Channels",
+                        "default": []
+                    },
+                    "device_tokens": {
+                        "items": {
+                            "$ref": "#/components/schemas/DeviceToken"
+                        },
+                        "type": "array",
+                        "title": "Device Tokens",
+                        "default": []
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "email",
+                    "id"
+                ],
+                "title": "UserExtended"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}
