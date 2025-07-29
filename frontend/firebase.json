@@ -1,0 +1,34 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "silver-notifications",
+          "appId": "1:1037064097669:android:964cddad7590e343697eec",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "silver-notifications",
+          "configurations": {
+            "android": "1:1037064097669:android:964cddad7590e343697eec",
+            "ios": "1:1037064097669:ios:d0d3b72a146acabb697eec",
+            "macos": "1:1037064097669:ios:d0d3b72a146acabb697eec",
+            "web": "1:1037064097669:web:ea5743fe24baa680697eec",
+            "windows": "1:1037064097669:web:88ec0fc7895a7cba697eec"
+          }
+        }
+      }
+    }
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  }
+}

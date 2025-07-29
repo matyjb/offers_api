@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:offers/presentation/screens/home/home.dart';
 import 'package:offers/presentation/screens/login/login.dart';
@@ -8,14 +9,23 @@ class RouteNames {
 }
 
 class AppRouter {
-  Route? onGenerateRoute(RouteSettings settings) {
+  Route<T> _buildRoute<T>(RouteSettings settings, Widget screen) {
+    return MaterialPageRoute(builder: (_) => screen, settings: settings);
+  }
+
+  Route _buildNotFoundRoute(RouteSettings settings) {
     return MaterialPageRoute(
-      builder: (_) => switch (settings.name) {
-        RouteNames.home => const HomeScreen(),
-        RouteNames.login => const LoginScreen(),
-        _ => const Scaffold(body: Text("404 route not found")),
-      },
-      settings: RouteSettings(arguments: settings.arguments),
+      builder: (_) =>
+          const Scaffold(body: Center(child: Text("404 - Page not found"))),
+      settings: settings,
     );
+  }
+
+  Route? onGenerateRoute(RouteSettings settings) {
+    return switch (settings.name) {
+      RouteNames.home => _buildRoute(settings, const HomeScreen()),
+      RouteNames.login => _buildRoute<User?>(settings, const LoginScreen()),
+      _ => _buildNotFoundRoute(settings),
+    };
   }
 }

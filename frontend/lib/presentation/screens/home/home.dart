@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:offers/logic/auth/auth_bloc.dart';
+import 'package:offers/router.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,8 +16,8 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.login),
             onPressed: () {
-              Navigator.of(context).pushNamed<User?>('/login').then((
-                User? value,
+              Navigator.of(context).pushNamed<User?>(RouteNames.login).then((
+                value,
               ) {
                 if (value != null) {
                   if (context.mounted) {
@@ -30,11 +31,17 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: const Text(
-          'Welcome! You are logged in.',
-          style: TextStyle(fontSize: 18),
-        ),
+      body: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          return Center(
+            child: Text(switch (state) {
+              AuthUnauthenticated _ => 'You are not logged in',
+              AuthAuthenticated(user: final user) =>
+                'Welcome, ${user.email ?? "Guest"}',
+              AuthState() => 'Unknown state',
+            }, style: TextStyle(fontSize: 18)),
+          );
+        },
       ),
     );
   }
