@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:offers/constants.dart';
+import 'package:offers/providers.dart';
 import 'package:offers/router.dart';
 
 void main() async {
@@ -18,14 +19,16 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: appName,
-      theme: ThemeData.light(useMaterial3: true),
-      darkTheme: ThemeData.dark(useMaterial3: true),
-      themeMode: ThemeMode.system,
-      onGenerateRoute: _appRouter.onGenerateRoute,
-      initialRoute: RouteNames.home,
+    return BlocProviders(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: appName,
+        theme: ThemeData.light(useMaterial3: true),
+        darkTheme: ThemeData.dark(useMaterial3: true),
+        themeMode: ThemeMode.system,
+        onGenerateRoute: _appRouter.onGenerateRoute,
+        initialRoute: RouteNames.home,
+      ),
     );
   }
 }
