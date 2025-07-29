@@ -1,3 +1,4 @@
+
 from pydantic import BaseModel
 from typing import TYPE_CHECKING
 
@@ -17,8 +18,10 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: str
-    channels: list["Channel"] = []  # Forward reference for Channel
+    channels_ids: list[str] = []
+    device_tokens_ids: list[str] = []
 
 
-class UserFull(User):
-    device_tokens: list["DeviceToken"] = []  # Forward reference for DeviceToken
+class UserExtended(User):
+    channels: list["Channel"] = []
+    device_tokens: list["DeviceToken"] = []

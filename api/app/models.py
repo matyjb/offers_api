@@ -52,6 +52,12 @@ class User(Base):
     id = Column(String, primary_key=True)
     email = Column(String, unique=True)
     is_admin = Column(Boolean, default=False)
+    device_tokens_ids = Column(
+        String, ForeignKey("device_tokens.id"), nullable=True
+    )  # Reference to DeviceToken model
+    channels_ids = Column(
+        String, ForeignKey("channels.id"), nullable=True
+    )  # Reference to Channel model
     device_tokens = relationship(
         "DeviceToken", back_populates="user"
     )  # Relationship to DeviceToken model

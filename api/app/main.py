@@ -4,17 +4,16 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from app.schemas.rebuild import rebuild_schemas
+
 rebuild_schemas()
 
-from app.schemas.device_token import DeviceToken, DeviceTokenCreate
-from app.schemas.offer import Offer, OfferCreate
-from app.schemas.user import User, UserCreate
+from app.schemas.device_token import DeviceTokenCreate, DeviceTokenExtended
+from app.schemas.offer import OfferCreate, OfferExtended
+from app.schemas.user import UserCreate, UserExtended
 from app.firebase_service import try_verify_firebase_token, verify_firebase_token
 from app import models
 from app.schemas import *
 from app.database import SessionLocal, engine
-
-
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -49,7 +48,7 @@ def get_db():
         db.close()
 
 
-@app.get("/api/v1/user", response_model=User)
+@app.get("/api/v1/user", response_model=UserExtended)
 async def get_current_user(
     db: Session = Depends(get_db),
     fb_user=Depends(verify_firebase_token),
@@ -62,7 +61,7 @@ async def get_current_user(
     return db_user
 
 
-@app.get("/api/v1/users", response_model=list[User])
+@app.get("/api/v1/users", response_model=list[UserExtended])
 async def get_users(
     db: Session = Depends(get_db),
     fb_user=Depends(verify_firebase_token),
@@ -80,7 +79,7 @@ async def get_users(
     return db_users
 
 
-@app.post("/api/v1/user", response_model=User)
+@app.post("/api/v1/user", response_model=UserExtended)
 async def create_user(
     user: UserCreate,
     db: Session = Depends(get_db),
@@ -102,7 +101,7 @@ async def create_user(
     return new_user
 
 
-@app.post("/api/v1/device_token", response_model=DeviceToken)
+@app.post("/api/v1/device_token", response_model=DeviceTokenExtended)
 async def register_device_token(
     device_token: DeviceTokenCreate,
     db: Session = Depends(get_db),
@@ -132,7 +131,7 @@ async def register_device_token(
         return new_device_token
 
 
-@app.get("/api/v1/offers", response_model=list[Offer])
+@app.get("/api/v1/offers", response_model=list[OfferExtended])
 async def get_offers(
     db: Session = Depends(get_db),
     fb_user=Depends(try_verify_firebase_token),
@@ -160,7 +159,7 @@ async def get_offers(
     return offers
 
 
-@app.post("/api/v1/offer", response_model=Offer)
+@app.post("/api/v1/offer", response_model=OfferExtended)
 async def create_offer(
     offer: OfferCreate,
     db: Session = Depends(get_db),
@@ -184,7 +183,7 @@ async def create_offer(
     return new_offer
 
 
-@app.delete("/api/v1/offer/{offer_id}", response_model=Offer)
+@app.delete("/api/v1/offer/{offer_id}", response_model=OfferExtended)
 async def delete_offer(
     offer_id: str,
     db: Session = Depends(get_db),

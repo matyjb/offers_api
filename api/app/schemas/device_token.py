@@ -1,3 +1,4 @@
+
 from datetime import datetime
 from pydantic import BaseModel
 from typing import TYPE_CHECKING, Optional
@@ -17,4 +18,8 @@ class DeviceTokenCreate(DeviceTokenBase):
 class DeviceToken(DeviceTokenBase):
     id: str
     expiration_date: datetime
+    user_id: Optional[str] = None
+
+
+class DeviceTokenExtended(DeviceToken):
     user: Optional["User"] = None
